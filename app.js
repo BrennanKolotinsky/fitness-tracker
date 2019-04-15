@@ -31,10 +31,8 @@ app.get("/api/exercise/new-user/:newUser", (req,res,next) => {
 
 app.get("/api/exercise/add/exerciseInfo", (req,res,next) => {
 
-    //data.favoriteFoods.push(foodToAdd);
 
     //check to see if there is already a workout existing for this id
-    
     let exerciseData = req.query.date ? {
         description: req.query.description,
         duration: req.query.duration,
@@ -46,7 +44,6 @@ app.get("/api/exercise/add/exerciseInfo", (req,res,next) => {
     console.log(exerciseData);
     
     Workout.findOne({userId: req.query.id}, (err,data) => {
-
         if(err) {
             done(err);
         } else {
@@ -67,14 +64,34 @@ app.get("/api/exercise/add/exerciseInfo", (req,res,next) => {
             });
         }  
     });
-
 });
 
 app.get('/api/exercise/:userInformation', (req, res, next) => {
-    let userId = req.params.userInformation;
+    let userId = req.query.id;
+    // let limit = req.query.limit;
 
     Workout.findOne({userId: userId}, (err,data) => {
-        err ? done(err) : res.json(data);
+        if (err) {
+            done(err);
+        } else {
+            // if no limit, just send back all of the exercises
+            if(req.query.limit == null) {
+                res.json(data.exercise);
+                //console.log(data.exercise.length);
+            } else {
+                let totalNumOfExercises = data.exercise.length;
+                let totalToDisplay = req.query.limit;
+                let tempArray = []; //create an array to store the exercises
+
+                // decrease the total we need to display by one each time, we loop and add to array
+                while (totalToDisplay > 0) {
+                    tempArray.push(data.exercise[totalNumOfExercises - totalToDisplay]);
+                    totalToDisplay--;
+                }
+
+                res.json({workouts: tempArray})
+            }
+        }
     })    
 });
 
