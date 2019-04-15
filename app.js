@@ -2,15 +2,15 @@ const express = require('express');
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
 const cors = require("cors");
-const User = require('./models/model.js'); //call the schemas builder
-const Workout = require('./models/model.js');
+const User = require('./models/userModel.js'); //call the schemas builder
+const Workout = require('./models/workoutModel.js');
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/public'));
 
-mongoose.connect("mongodb+srv://root:test@cluster0-xdnqr.mongodb.net/test?retryWrites=true", { useNewUrlParser: true });
+mongoose.connect("mongodb+srv://test:root@cluster0-q45yj.mongodb.net/test?retryWrites=true", { useNewUrlParser: true });
 
 app.get("/api/exercise/new-user/:newUser", (req,res,next) => {
     userToAdd = req.params.newUser; //get user
