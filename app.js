@@ -30,29 +30,50 @@ app.get("/api/exercise/new-user/:newUser", (req,res,next) => {
 });
 
 app.get("/api/exercise/add/exerciseInfo", (req,res,next) => {
-    if (req.query.date) {
-        var data = new Workout ({ 
-            id : req.query.id,
-            description: req.query.description,
-            duration: req.query.duration,
-            date: req.query.date
-        });
-    } else {
-        var data = new Workout ({ 
-            id : req.query.id,
-            description: req.query.description,
-            duration: req.query.duration
-        });
-    }
-    data.save(err=>{
-        err ? res.send(err) : res.json(data);
+
+    //data.favoriteFoods.push(foodToAdd);
+
+    //check to see if there is already a workout existing for this id
+    
+    let exerciseData = req.query.date ? {
+        description: req.query.description,
+        duration: req.query.duration,
+        date: req.query.date
+    } : {
+        description: req.query.description,
+        duration: req.query.duration
+    };
+    console.log(exerciseData);
+    
+    Workout.findOne({userId: req.query.id}, (err,data) => {
+
+        if(err) {
+            done(err);
+        } else {
+            
+            //if there's no existing data, we will place a new userid and exercise piece of data. However, if the data exists we will push it into the array
+            if (data == null) {
+                var data = new Workout ({ 
+                    userId : req.query.id,
+                    exercise : [exerciseData] 
+                });
+                
+            } else {
+                data.exercise.push(exerciseData);
+            }
+
+            data.save(err=>{
+                err ? res.send(err) : res.json(data);
+            });
+        }  
     });
+
 });
 
 app.get('/api/exercise/:userInformation', (req, res, next) => {
     let userId = req.params.userInformation;
 
-    User.findOne({userId: userId}, (err,data) => {
+    Workout.findOne({userId: userId}, (err,data) => {
         err ? done(err) : res.json(data);
     })    
 });
