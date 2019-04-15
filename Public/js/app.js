@@ -13,7 +13,7 @@ function updateExerciseLink() {
 
     // the  date isn't required so we'll change the link based on whether it has been entered
     if (id && description && duration && date) {
-        document.getElementById('exercise-submit').href = "http://localhost:3000/api/exercise/add/exerciseInfo?" + "id=" + userId + "&description=" + description + "&duration=" + duration + "&date=" + date; //update where we are submitting to!
+        document.getElementById('exercise-submit').href = "http://localhost:3000/api/exercise/add/exerciseInfo?" + "id=" + id + "&description=" + description + "&duration=" + duration + "&date=" + date; //update where we are submitting to!
     } else if (id && description && duration) {
         document.getElementById('exercise-submit').href = "http://localhost:3000/api/exercise/add/exerciseInfo?" + "id=" + id + "&description=" + description + "&duration=" + duration;
     }
